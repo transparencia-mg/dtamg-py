@@ -142,3 +142,9 @@ def run_dpckan_dataset(action):
     with open(datapackage_yaml_path, 'w', encoding='utf-8') as f:
       datapackage_yaml['ckan_hosts'] = new_datapackage_ckan_hosts
       yaml.dump(datapackage_yaml, f)
+
+def validate(resource_name):
+  package = Package('datapackage.yaml')
+  resource = package.get_resource(resource_name)
+  report = validate_resource(resource)
+  json.dump(report, sys.stdout, indent=2)
