@@ -12,24 +12,26 @@ import json
 load_dotenv(dotenv_path=Path('.', '.env'))
 
 def extract_resource(resource_name):
-    conn = pymysql.connect(host=os.environ.get('DB_HOST'),
-                           user=os.environ.get('DB_USER'),
-                           password=os.environ.get('DB_PASSWORD'),
-                           database=os.environ.get('DB_DATABASE'),
-                           cursorclass=pymysql.cursors.DictCursor)
-    cur = conn.cursor()
-    sql_file = open(f'scripts/sql/{resource_name}.sql')
-    sql_query = sql_file.read()
-    cur.execute(sql_query)
+  conn = pymysql.connect(host=os.environ.get('DB_HOST'),
+                         user=os.environ.get('DB_USER'),
+                         password=os.environ.get('DB_PASSWORD'),
+                         database=os.environ.get('DB_DATABASE'),
+                         cursorclass=pymysql.cursors.DictCursor)
+  cur = conn.cursor()
+  sql_file = open(f'scripts/sql/{resource_name}.sql')
+  sql_query = sql_file.read()
+  cur.execute(sql_query)
+  rows = cur.fetchall()
+  colnames = [desc[0] for desc in cur.description]
+  with open(f'data/raw/{resource_name}.csv', "w", encoding='utf-8-sig', newline='') as fp:
+    myFile = csv.DictWriter(fp, colnames, delimiter=';')
+    myFile.writeheader()
+    myFile.writerows(rows)
 
-    rows = cur.fetchall()
-
-    colnames = [desc[0] for desc in cur.description]
-
-    with open(f'data/raw/{resource_name}.csv', "w", encoding='utf-8-sig', newline='') as fp:
-        myFile = csv.DictWriter(fp, colnames, delimiter=';')
-        myFile.writeheader()
-        myFile.writerows(rows)
+def full_extract():
+  dp = Package('datapackage.yaml')
+  for resource in dp.resources:
+    extract_resource(resource.name)
 
 def update_resource_hash(resource_name):
     dp = Package('datapackage.json')
@@ -143,8 +145,9 @@ def run_dpckan_dataset(action):
       datapackage_yaml['ckan_hosts'] = new_datapackage_ckan_hosts
       yaml.dump(datapackage_yaml, f)
 
-def validate(resource_name):
+def validate(resources_names):
+  import ipdb; ipdb.set_trace(context=10)
   package = Package('datapackage.yaml')
-  resource = package.get_resource(resource_name)
+  resource = package.get_resource(resources_names)
   report = validate_resource(resource)
   json.dump(report, sys.stdout, indent=2)

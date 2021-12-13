@@ -1,11 +1,6 @@
 import click
 from frictionless import Package
-from dtamg_py.utils import extract_resource
-
-def full_extract():
-  dp = Package('datapackage.yaml')
-  for resource in dp.resources:
-    extract_resource(resource.name)
+from dtamg_py.utils import full_extract
 
 @click.command(name='full-extract')
 def full_extract_cli():
