@@ -7,7 +7,6 @@ def full_extract():
   for resource in dp.resources:
     extract_resource(resource.name)
 
-
 @click.command(name='full-extract')
 def full_extract_cli():
   full_extract()
