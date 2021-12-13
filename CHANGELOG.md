@@ -5,3 +5,4 @@ Documentação das principais alterações sofridas por este repositório. Basea
 ### [0.0.900] - 2021-12-13
 
 - Criação do pacote
+- Migração projeto etl-make - https://github.com/dados-mg/etl-make
