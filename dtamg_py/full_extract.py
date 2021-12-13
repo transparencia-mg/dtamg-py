@@ -1,3 +1,4 @@
+import click
 from frictionless import Package
 from dtamg_py.utils import extract_resource
 
