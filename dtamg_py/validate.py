@@ -1,10 +1,10 @@
 import click
 import sys
-import json
-from frictionless import Package
-from frictionless import validate_resource
 from dtamg_py.utils import validate
 
 @click.command(name='validate')
-def validate_cli():
-  validate(sys.argv[1])
+@click.option('--resource', '-r', required=True,
+              help="Recursos a serem validados")
+def validate_cli(resource):
+  validate(sys.argv[-1])
+

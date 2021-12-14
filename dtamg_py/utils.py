@@ -1,9 +1,12 @@
 import os
+import sys
+import json
 import csv
 import shutil
 import hashlib
 import yaml
 from frictionless import Package
+from frictionless import validate_resource
 from dpckan import update_resource
 import pymysql
 from pathlib import Path
@@ -145,9 +148,8 @@ def run_dpckan_dataset(action):
       datapackage_yaml['ckan_hosts'] = new_datapackage_ckan_hosts
       yaml.dump(datapackage_yaml, f)
 
-def validate(resources_names):
-  import ipdb; ipdb.set_trace(context=10)
+def validate(resource_name):
   package = Package('datapackage.yaml')
-  resource = package.get_resource(resources_names)
+  resource = package.get_resource(resource_name)
   report = validate_resource(resource)
-  json.dump(report, sys.stdout, indent=2)
+  json.dump(report, sys.stdout, indent=2, ensure_ascii=False)
