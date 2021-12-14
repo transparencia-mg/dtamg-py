@@ -59,7 +59,7 @@ def build_datapackages():
   from_to_file_path = 'age7.yaml'
   from_to_file = load_yaml_file(from_to_file_path)
   for dataset in from_to_file['consultas'].keys():
-    shutil.copytree(f'datasets/{dataset}/', f'build_datasets/{dataset}/')
+    shutil.copytree(f'datasets/{dataset}/', f'build_datasets/{dataset}/', ignore=shutil.ignore_patterns("*.yaml"))
     os.makedirs(f'build_datasets/{dataset}/data')
     # os.system(f'cp datasets/{dataset}/*.md build_datasets/{dataset}')
     # Lê o arquivo datapackage.json para, entre outros, extrair os recursos daquele conjunto
