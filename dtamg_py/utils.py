@@ -154,7 +154,7 @@ def validate(resource_name):
   report = validate_resource(resource)
   json.dump(report, sys.stdout, indent=2, ensure_ascii=False)
 
-def buil_datapackage_json():
+def build_datapackage():
   dp = Package('./datapackage.yaml')
   readme = os.path.join(dp.basepath, 'README.md')
   contributing = os.path.join(dp.basepath, 'CONTRIBUTING.md')

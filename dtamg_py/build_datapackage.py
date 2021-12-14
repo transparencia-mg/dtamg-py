@@ -1,6 +1,6 @@
 import click
-from dtamg_py.utils import buil_datapackage_json
+from dtamg_py.utils import build_datapackage
 
-@click.command(name='build-datapackage-json')
-def buil_datapackage_json_cli():
-  buil_datapackage_json()
+@click.command(name='build-datapackage')
+def build_datapackage_cli():
+  build_datapackage()
