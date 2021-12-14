@@ -46,7 +46,7 @@ def update_resource_hash(resource_name):
     resource.stats.update({'hash': md5_hash.hexdigest()})
     dp.to_json('datapackage.json')
 
-def create_datasets_folder():
+def build_documentation_folder():
   from_to_file_path = 'age7.yaml'
   from_to_file = load_yaml_file(from_to_file_path)
   for dataset in from_to_file['consultas'].keys():
