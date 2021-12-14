@@ -46,12 +46,6 @@ def update_resource_hash(resource_name):
     resource.stats.update({'hash': md5_hash.hexdigest()})
     dp.to_json('datapackage.json')
 
-def datasets_create():
-  run_dpckan_dataset('create')
-
-def datasets_update():
-  run_dpckan_dataset('update')
-
 def create_datasets_folder():
   from_to_file_path = 'age7.yaml'
   from_to_file = load_yaml_file(from_to_file_path)
@@ -59,7 +53,7 @@ def create_datasets_folder():
     if not os.path.exists(f'datasets/{dataset}'):
       shutil.copytree('templates/', f'datasets/{dataset}/')
 
-def create_datasets_build_folder():
+def build_datapackages():
   if os.path.exists('build_datasets/'):
     shutil.rmtree('build_datasets/')
   from_to_file_path = 'age7.yaml'
