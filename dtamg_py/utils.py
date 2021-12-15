@@ -14,27 +14,31 @@ from dotenv import load_dotenv
 import json
 load_dotenv(dotenv_path=Path('.', '.env'))
 
-def extract_resource(resource_name):
-  conn = pymysql.connect(host=os.environ.get('DB_HOST'),
+def extract_resources(resources):
+  connection = pymysql.connect(host=os.environ.get('DB_HOST'),
                          user=os.environ.get('DB_USER'),
                          password=os.environ.get('DB_PASSWORD'),
                          database=os.environ.get('DB_DATABASE'),
                          cursorclass=pymysql.cursors.DictCursor)
-  cur = conn.cursor()
-  sql_file = open(f'scripts/sql/{resource_name}.sql')
-  sql_query = sql_file.read()
-  cur.execute(sql_query)
-  rows = cur.fetchall()
-  colnames = [desc[0] for desc in cur.description]
-  with open(f'data/raw/{resource_name}.csv', "w", encoding='utf-8-sig', newline='') as fp:
-    myFile = csv.DictWriter(fp, colnames, delimiter=';')
-    myFile.writeheader()
-    myFile.writerows(rows)
+  with connection:
+    with connection.cursor() as cursor:
+      for resource_name in resources:
+        if cursor.execute(f"show tables where Tables_in_age7 = '{resource_name}';") == 1:
+          sql_file = open(f'scripts/sql/{resource_name}.sql')
+          sql_query = sql_file.read()
+          cursor.execute(sql_query)
+          rows = cursor.fetchall()
+          colnames = [desc[0] for desc in cursor.description]
+          with open(f'data/raw/{resource_name}.csv', "w", encoding='utf-8-sig', newline='') as fp:
+            myFile = csv.DictWriter(fp, colnames, delimiter=';')
+            myFile.writeheader()
+            myFile.writerows(rows)
+        else:
+          os.system(f"echo Tabela {resource_name} não existente no banco de dados >> logs/full_extract.txt")
 
 def full_extract():
   dp = Package('datapackage.yaml')
-  for resource in dp.resources:
-    extract_resource(resource.name)
+  extract_resources(dp.resource_names)
 
 def update_resource_hash(resource_name):
     dp = Package('datapackage.json')
