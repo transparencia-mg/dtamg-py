@@ -20,7 +20,7 @@ INSTALL_REQUIRES = [
 
 # Variáveis author, copyright e licence utilizadas para criação/atualização do arquivo LICENCE.txt (rotina Make durante processo de atualização do pacote "make update-package")
 name = 'dtamg-py'
-version = '0.0.900'
+version = '0.1.0'
 author = 'CONTROLADORIA GERAL DO ESTADO DE MINAS GERAIS - CGE/MG'
 email_author = 'dadosabertos@cge.mg.gov.br'
 description = 'Gestão do processos internos da Diretoria Central de Transparência Ativa'
