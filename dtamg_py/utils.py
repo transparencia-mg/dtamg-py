@@ -12,6 +12,7 @@ import pymysql
 from pathlib import Path
 from dotenv import load_dotenv
 import json
+import click
 load_dotenv(dotenv_path=Path('.', '.env'))
 
 def extract_resources(resources):
@@ -34,7 +35,7 @@ def extract_resources(resources):
             myFile.writeheader()
             myFile.writerows(rows)
         else:
-          os.system(f"echo Tabela {resource_name} não existente no banco de dados >> logs/full_extract.txt")
+         click.echo(f"echo Tabela {resource_name} não existente no banco de dados")
 
 def full_extract():
   dp = Package('datapackage.yaml')
@@ -99,7 +100,7 @@ def update_resource_properties(base_dp):
     base_dp.get_resource(resource).dialect.expand()
     if not os.path.exists(path):
       # Excluir recurso se arquivo de dados não existir
-      print(f'Arquivo de dados do recurso "{resource}" do dataset "{base_dp.name}" ausente.')
+      click.echo(f'Arquivo de dados do recurso "{resource}" do dataset "{base_dp.name}" ausente.')
       base_dp.remove_resource(resource)
     else:
       new_path = f'build_datasets/{base_dp.name}/{path}'
@@ -122,7 +123,7 @@ def find_target_resources(from_to_file, fact_tables):
         if dim_table not in target_resources:
           target_resources.append(dim_table)
     else:
-      print(f"{fact_table} não existente em data['fact_tables']")
+      click.echo(f"{fact_table} não existente em data['fact_tables']")
   return target_resources
 
 def run_dpckan_dataset(action):
@@ -164,7 +165,7 @@ def build_datapackage():
   if os.path.isfile(changelog):
       dp.update({'description': f"{dp.get('description')}\n{open(changelog).read()}"})
   for resource in dp.resources:
-    print(f"Processando recurso{resource.name}")
+    click.echo(f"Processando recurso {resource.name}...")
     resource.infer(stats = True)
     resource.schema.expand()
     with open(f"logs/validate/{resource.name}.json") as json_file:
