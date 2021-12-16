@@ -164,6 +164,7 @@ def build_datapackage():
   if os.path.isfile(changelog):
       dp.update({'description': f"{dp.get('description')}\n{open(changelog).read()}"})
   for resource in dp.resources:
+    print(f"Processando recurso{resource.name}")
     resource.infer(stats = True)
     resource.schema.expand()
     with open(f"logs/validate/{resource.name}.json") as json_file:
