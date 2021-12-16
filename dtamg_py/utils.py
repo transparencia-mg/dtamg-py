@@ -23,23 +23,24 @@ def extract_resources(resources):
                          cursorclass=pymysql.cursors.DictCursor)
   with connection:
     with connection.cursor() as cursor:
-      for resource_name in resources:
-        if cursor.execute(f"show tables where Tables_in_age7 = '{resource_name}';") == 1:
-          sql_file = open(f'scripts/sql/{resource_name}.sql')
+      for resource in resources:
+        if cursor.execute(f"show tables where Tables_in_age7 = '{resource.sources[0]['table']}';") == 1:
+          click.echo(f"Extraindo recurso {resource.name}...")
+          sql_file = open(f'scripts/sql/{resource.name}.sql')
           sql_query = sql_file.read()
           cursor.execute(sql_query)
           rows = cursor.fetchall()
           colnames = [desc[0] for desc in cursor.description]
-          with open(f'data/raw/{resource_name}.csv', "w", encoding='utf-8-sig', newline='') as fp:
+          with open(f'data/raw/{resource.name}.csv', "w", encoding='utf-8-sig', newline='') as fp:
             myFile = csv.DictWriter(fp, colnames, delimiter=';')
             myFile.writeheader()
             myFile.writerows(rows)
         else:
-         click.echo(f"echo Tabela {resource_name} não existente no banco de dados")
+         click.echo(f"echo Tabela {resource.name} não existente no banco de dados")
 
 def full_extract():
   dp = Package('datapackage.yaml')
-  extract_resources(dp.resource_names)
+  extract_resources(dp.resources)
 
 def update_resource_hash(resource_name):
     dp = Package('datapackage.json')
