@@ -166,7 +166,6 @@ def build_datapackage():
       dp.update({'description': f"{dp.get('description')}\n{open(changelog).read()}"})
   for resource in dp.resources:
     click.echo(f"Processando recurso {resource.name}...")
-    resource.infer(stats = True)
     resource.schema.expand()
     with open(f"logs/validate/{resource.name}.json") as json_file:
         validation_log = json.load(json_file)
