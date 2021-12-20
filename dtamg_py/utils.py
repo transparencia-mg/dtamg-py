@@ -26,7 +26,7 @@ def extract_resources(resources):
       for resource in resources:
         if cursor.execute(f"show tables where Tables_in_age7 = '{resource.sources[0]['table']}';") == 1:
           click.echo(f"Extraindo recurso {resource.name}...")
-          sql_file = open(f'scripts/sql/{resource.name}.sql')
+          sql_file = open(f'scripts/sql/{resource.name}.sql', encoding='utf-8')
           sql_query = sql_file.read()
           cursor.execute(sql_query)
           rows = cursor.fetchall()
@@ -160,15 +160,15 @@ def build_datapackage():
   contributing = os.path.join(dp.basepath, 'CONTRIBUTING.md')
   changelog = os.path.join(dp.basepath, 'CHANGELOG.md')
   if os.path.isfile(readme):
-      dp.update({'description': f"{dp.get('description')}\n{open(readme).read()}"})
+      dp.update({'description': f"{dp.get('description')}\n{open(readme, encoding='utf-8').read()}"})
   if os.path.isfile(contributing):
-      dp.update({'description': f"{dp.get('description')}\n{open(contributing).read()}"})
+      dp.update({'description': f"{dp.get('description')}\n{open(contributing, encoding='utf-8').read()}"})
   if os.path.isfile(changelog):
-      dp.update({'description': f"{dp.get('description')}\n{open(changelog).read()}"})
+      dp.update({'description': f"{dp.get('description')}\n{open(changelog, encoding='utf-8').read()}"})
   for resource in dp.resources:
     click.echo(f"Processando recurso {resource.name}...")
     resource.schema.expand()
-    with open(f"logs/validate/{resource.name}.json") as json_file:
+    with open(f"logs/validate/{resource.name}.json", encoding='utf-8') as json_file:
         validation_log = json.load(json_file)
     resource.update({'validation': validation_log})
   dp.to_json('datapackage.json')
