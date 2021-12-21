@@ -7,6 +7,7 @@ from dtamg_py.create import dpckan_create_cli
 from dtamg_py.update import dpckan_update_cli
 from dtamg_py.build_documentation_folder import build_documentation_folder_cli
 from dtamg_py.validate_tableschemas import validate_tableschemas_cli
+from dtamg_py.remove_sqs import remove_sqs_cli
 
 @click.group(context_settings=dict(help_option_names=["-h", "--help"]))
 def cli():
@@ -24,3 +25,4 @@ etl_make.add_command(dpckan_create_cli)
 etl_make.add_command(dpckan_update_cli)
 etl_make.add_command(build_documentation_folder_cli)
 etl_make.add_command(validate_tableschemas_cli)
+etl_make.add_command(remove_sqs_cli)
