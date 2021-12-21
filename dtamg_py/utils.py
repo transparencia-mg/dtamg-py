@@ -7,6 +7,7 @@ import hashlib
 import yaml
 from frictionless import Package
 from frictionless import validate_resource
+from frictionless import validate_schema
 from dpckan import update_resource
 import pymysql
 from pathlib import Path
@@ -170,3 +171,15 @@ def build_datapackage():
         validation_log = json.load(json_file)
     resource.update({'validation': validation_log})
   dp.to_json('datapackage.json')
+
+def validate_tableschema():
+  path = 'schemas'
+  folder = os.fsencode(path)
+  for file in os.listdir(folder):
+    file_name = str(file).split('\'')[1]
+    if file_name.split('.')[-1] == 'yaml':
+      file_path = f'{path}/{file_name}'
+      report = validate_schema(file_path)
+      if report.valid == False:
+        click.echo(f'Metadado do recurso {file} inválido')
+
