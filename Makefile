@@ -6,10 +6,10 @@ update-package: clean-build build publish-build ## Limpa, constroi e publica nov
 
 clean-build: ## Limpa as pastas build e dist e o arquivo .egg-info, criados para publicação do pacote
 	@echo "Limpando pastas e arquivos necessários para publicação do pacote"
-	@rm --force --recursive build/
-	@rm --force --recursive dist/
-	@rm --force --recursive *.egg-info
-	@rm --force --recursive LICENCE.txt
+	@rm -rf build/
+	@rm -rf dist/
+	@rm -rf *.egg-info
+	@rm -rf LICENCE.txt
 
 build: setup.py ## Constroi as pastas e arquivos necessários para publicação do pacote
 	@echo "Construindo pacote"
