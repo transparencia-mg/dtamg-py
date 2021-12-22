@@ -5,8 +5,10 @@ import csv
 import shutil
 import hashlib
 import yaml
+import ruamel.yaml
 from frictionless import Package
 from frictionless import validate_resource
+from frictionless import validate_schema
 from dpckan import update_resource
 import pymysql
 from pathlib import Path
@@ -172,3 +174,38 @@ def build_datapackage():
         validation_log = json.load(json_file)
     resource.update({'validation': validation_log})
   dp.to_json('datapackage.json')
+
+def validate_tableschema():
+  path = 'schemas'
+  folder = os.fsencode(path)
+  for file in os.listdir(folder):
+    file_name = str(file).split('\'')[1]
+    if file_name.split('.')[-1] == 'yaml':
+      file_path = f'{path}/{file_name}'
+      report = validate_schema(file_path)
+      if report.valid == False:
+        click.echo(f'Metadado do recurso {file} inválido')
+
+def remove_sqs():
+  path = 'schemas'
+  folder = os.fsencode(path)
+  for file in os.listdir(folder):
+    file_name = str(file).split('\'')[1]
+    if file_name.split('.')[-1] == 'yaml':
+      file_path = f'{path}/{file_name}'
+      yaml = ruamel.yaml.YAML()
+      yaml.allow_duplicate_keys = True
+      yaml.preserve_quotes = True
+      yaml.indent(mapping=2, sequence=4, offset=2)
+      file_content = open(file_path, encoding='utf-8').read()
+      file_content = yaml.load(file_content)
+      with open(file_path, 'w', encoding='utf-8') as f:
+        for resource in file_content['fields']:
+          test = resource['name'][0:4]
+          if test == 'sqa_' or test == 'sqe_':
+            index = file_content['fields'].index(resource)
+            click.echo(f"Retirando campo {resource['name']} do recurso {file_name}")
+            file_content['fields'].pop(index)
+        click.echo(f"Salvando alterações no recurso {file_name}")
+        yaml.dump(file_content, f)
+
