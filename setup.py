@@ -12,10 +12,10 @@ INSTALL_REQUIRES = [
   "frictionless>=4.16.6",
   "frictionless-ckan-mapper>=1.0.6",
   "ckanapi>=4.0.0",
-  "dpckan==0.1.11",
-  "jsonpatch==1.32",
-  "psycopg2==2.9.1",
-  "PyMySQL==1.0.2"
+  "dpckan>=0.1.11",
+  "jsonpatch>=1.32",
+  "psycopg2>=2.9.1",
+  "PyMySQL>=1.0.2"
 ]
 
 # Variáveis author, copyright e licence utilizadas para criação/atualização do arquivo LICENCE.txt (rotina Make durante processo de atualização do pacote "make update-package")
