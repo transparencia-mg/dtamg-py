@@ -44,6 +44,12 @@ def full_extract():
   dp = Package('datapackage.yaml')
   extract_resources(dp.resources)
 
+def extract(resource_name):
+  dp = Package('datapackage.yaml')
+  resorces = []
+  resources.append(dp.get_resource(resource_name))
+  extract_resources(resources)
+
 def update_resource_hash(resource_name):
     dp = Package('datapackage.json')
     resource = dp.get_resource(resource_name)
