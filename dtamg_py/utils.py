@@ -46,7 +46,7 @@ def full_extract():
 
 def extract(resource_name):
   dp = Package('datapackage.yaml')
-  resorces = []
+  resources = []
   resources.append(dp.get_resource(resource_name))
   extract_resources(resources)
 
