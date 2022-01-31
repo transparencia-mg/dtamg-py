@@ -1,5 +1,6 @@
 import click
 from dtamg_py.full_extract import full_extract_cli
+from dtamg_py.extract import extract_cli
 from dtamg_py.validate import validate_cli
 from dtamg_py.build_datapackage import build_datapackage_cli
 from dtamg_py.build_datapackages import build_datapackages_cli
@@ -18,6 +19,7 @@ def etl_make():
   pass
 
 etl_make.add_command(full_extract_cli)
+etl_make.add_command(extract_cli)
 etl_make.add_command(validate_cli)
 etl_make.add_command(build_datapackage_cli)
 etl_make.add_command(build_datapackages_cli)
