@@ -15,7 +15,8 @@ INSTALL_REQUIRES = [
   "dpckan>=0.1.11",
   "jsonpatch>=1.32",
   "psycopg2>=2.9.1",
-  "PyMySQL>=1.0.2"
+  "PyMySQL>=1.0.2",
+  "ruamel.yaml==0.17.17",
 ]
 
 # Variáveis author, copyright e licence utilizadas para criação/atualização do arquivo LICENCE.txt (rotina Make durante processo de atualização do pacote "make update-package")
