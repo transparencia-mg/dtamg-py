@@ -27,11 +27,11 @@ def extract_resources(resources):
     with connection.cursor() as cursor:
       for resource in resources:
         if cursor.execute(f"show tables where Tables_in_age7 = '{resource.sources[0]['table']}';") == 1:
-          click.echo(f"Extraindo recurso {resource.name}...")
           sql_file = open(f'scripts/sql/{resource.name}.sql', encoding='utf-8')
           sql_query = sql_file.read()
           cursor.execute(sql_query)
           rows = cursor.fetchall()
+          check_resource_extraction_len(resource.name, rows)
           colnames = [desc[0] for desc in cursor.description]
           with open(f'data/raw/{resource.name}.csv', "w", encoding='utf-8-sig', newline='') as fp:
             myFile = csv.DictWriter(fp, colnames, delimiter=';')
@@ -39,6 +39,19 @@ def extract_resources(resources):
             myFile.writerows(rows)
         else:
          click.echo(f"echo Tabela {resource.name} não existente no banco de dados")
+
+def check_resource_extraction_len(resource_name, rows):
+  if len(rows) == 0:
+    warning_message = f"Recurso {resource_name} sem nenhum registro."
+    with open(f'logs/extract/{resource_name}.txt', "w", encoding='utf-8-sig') as f:
+      f.write(warning_message)
+    click.echo(warning_message)
+  else:
+    click.echo(f"Extraindo recurso {resource_name}...")
+
+def get_empty_resources():
+  files = os.listdir('logs/extract')
+  return len(files) -1 
 
 def full_extract():
   dp = Package('datapackage.yaml')
