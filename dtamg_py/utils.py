@@ -11,11 +11,8 @@ from frictionless import validate_resource
 from frictionless import validate_schema
 from dpckan import update_resource
 import pymysql
-from pathlib import Path
-from dotenv import load_dotenv
 import json
 import click
-load_dotenv(dotenv_path=Path('.', '.env'))
 
 def extract_resources(resources):
   connection = pymysql.connect(host=os.environ.get('DB_HOST'),
