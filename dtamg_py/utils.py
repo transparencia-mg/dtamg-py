@@ -15,7 +15,6 @@ from pathlib import Path
 from dotenv import load_dotenv
 import json
 import click
-load_dotenv(dotenv_path=Path('.', '.env'))
 
 def extract_resources(resources):
   connection = pymysql.connect(host=os.environ.get('DB_HOST'),
