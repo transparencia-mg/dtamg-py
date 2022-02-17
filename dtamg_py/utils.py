@@ -33,7 +33,7 @@ def extract_resources(resources):
           cursor.execute(sql_query)
           rows = cursor.fetchall()
           if len(rows) == 0:
-            click.echo(f"Recurso {resource.name} sem nenhum registro.")
+            click.echo(f"Recurso {resource.name} sem nenhum registro.", err=True)
           colnames = [desc[0] for desc in cursor.description]
           with open(f'data/raw/{resource.name}.csv', "w", encoding='utf-8-sig', newline='') as fp:
             myFile = csv.DictWriter(fp, colnames, delimiter=';')
