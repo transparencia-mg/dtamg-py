@@ -13,6 +13,9 @@ from dpckan import update_resource
 import pymysql
 import json
 import click
+import logging
+
+logger = logging.getLogger(__name__)
 
 def extract_resources(resources):
   connection = pymysql.connect(host=os.environ.get('DB_HOST'),
@@ -24,20 +27,20 @@ def extract_resources(resources):
     with connection.cursor() as cursor:
       for resource in resources:
         if cursor.execute(f"show tables where Tables_in_age7 = '{resource.sources[0]['table']}';") == 1:
-          click.echo(f"Extraindo recurso {resource.name}...")
+          logger.info(f"Extraindo recurso {resource.name}...")
           sql_file = open(f'scripts/sql/{resource.name}.sql', encoding='utf-8')
           sql_query = sql_file.read()
           cursor.execute(sql_query)
           rows = cursor.fetchall()
           if len(rows) == 0:
-            click.echo(f"Recurso {resource.name} sem nenhum registro.", err=True)
+            logger.warning(f"Recurso {resource.name} sem nenhum registro.")
           colnames = [desc[0] for desc in cursor.description]
           with open(f'data/raw/{resource.name}.csv', "w", encoding='utf-8-sig', newline='') as fp:
             myFile = csv.DictWriter(fp, colnames, delimiter=';')
             myFile.writeheader()
             myFile.writerows(rows)
         else:
-         click.echo(f"echo Tabela {resource.name} não existente no banco de dados")
+         logger.error(f"echo Tabela {resource.name} não existente no banco de dados")
 
 def full_extract():
   dp = Package('datapackage.yaml')
@@ -108,7 +111,7 @@ def update_resource_properties(base_dp):
     base_dp.get_resource(resource).dialect.expand()
     if not os.path.exists(path):
       # Excluir recurso se arquivo de dados não existir
-      click.echo(f'Arquivo de dados do recurso "{resource}" do dataset "{base_dp.name}" ausente.')
+      logger.warning(f'Arquivo de dados do recurso "{resource}" do dataset "{base_dp.name}" ausente.')
       base_dp.remove_resource(resource)
     else:
       new_path = f'build_datasets/{base_dp.name}/{path}'
@@ -131,7 +134,7 @@ def find_target_resources(from_to_file, fact_tables):
         if dim_table not in target_resources:
           target_resources.append(dim_table)
     else:
-      click.echo(f"{fact_table} não existente em data['fact_tables']")
+      logger.warning(f"{fact_table} não existente em data['fact_tables']")
   return target_resources
 
 def run_dpckan_dataset(action):
@@ -173,7 +176,7 @@ def build_datapackage():
   if os.path.isfile(changelog):
       dp.update({'description': f"{dp.get('description')}\n{open(changelog, encoding='utf-8').read()}"})
   for resource in dp.resources:
-    click.echo(f"Processando recurso {resource.name}...")
+    logger.info(f"Processando recurso {resource.name}...")
     resource.schema.expand()
     with open(f"logs/validate/{resource.name}.json", encoding='utf-8') as json_file:
         validation_log = json.load(json_file)
@@ -189,7 +192,7 @@ def validate_tableschema():
       file_path = f'{path}/{file_name}'
       report = validate_schema(file_path)
       if report.valid == False:
-        click.echo(f'Metadado do recurso {file} inválido')
+        logger.warning(f'Metadado do recurso {file} inválido')
 
 def remove_sqs():
   path = 'schemas'
@@ -209,8 +212,8 @@ def remove_sqs():
           test = resource['name'][0:4]
           if test == 'sqa_' or test == 'sqe_':
             index = file_content['fields'].index(resource)
-            click.echo(f"Retirando campo {resource['name']} do recurso {file_name}")
+            logger.info(f"Retirando campo {resource['name']} do recurso {file_name}")
             file_content['fields'].pop(index)
-        click.echo(f"Salvando alterações no recurso {file_name}")
+        logger.info(f"Salvando alterações no recurso {file_name}")
         yaml.dump(file_content, f)
 
