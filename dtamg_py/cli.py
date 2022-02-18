@@ -15,7 +15,7 @@ LOG_FORMAT = '%(asctime)s %(levelname)-5.5s [%(name)s] %(message)s'
 LOG_DATE_FORMAT = '%Y-%m-%dT%H:%M:%S%z'
 
 @click.group(context_settings=dict(help_option_names=["-h", "--help"]))
-@click.option('--verbose', '-v', default=False, is_flag=True)
+@click.option('--verbose', '-v', default=False, is_flag=True, help='Produce detailed output for diagnostic purposes.')
 def cli(verbose):
   if verbose:
         logging.basicConfig(format=LOG_FORMAT, datefmt=LOG_DATE_FORMAT, level=logging.DEBUG)
