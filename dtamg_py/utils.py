@@ -4,6 +4,7 @@ import json
 import csv
 import shutil
 import hashlib
+from pymysql import OperationalError
 import yaml
 import ruamel.yaml
 from frictionless import Package
@@ -17,30 +18,56 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-def extract_resources(resources):
-  connection = pymysql.connect(host=os.environ.get('DB_HOST'),
+def connect():
+  result = pymysql.connect(host=os.environ.get('DB_HOST'),
                          user=os.environ.get('DB_USER'),
                          password=os.environ.get('DB_PASSWORD'),
                          database=os.environ.get('DB_DATABASE'),
                          cursorclass=pymysql.cursors.DictCursor)
-  with connection:
+  return result
+
+def extract_resources(resources):
+  
+  MAX_RETRIES = 10
+  WAIT_IN_SECONDS = 10
+  retry = 1
+
+  while(bool(resources)):
+    try:
+      connection = connect()
+      with connection:
+          for resource in resources:
+            extract_csv(connection, resource)
+            resources.remove(resource)
+    except OperationalError as e:
+      logger.error(f'{e}')
+      while retry < MAX_RETRIES:
+        retry += 1
+        logger.info(f'{retry} retry attempt.')
+        try:
+          connection = connect()
+          break
+        except OperationalError as e:
+          logger.error(f'{e}')
+          continue
+
+def extract_csv(connection, resource):
     with connection.cursor() as cursor:
-      for resource in resources:
-        if cursor.execute(f"show tables where Tables_in_age7 = '{resource.sources[0]['table']}';") == 1:
-          logger.info(f"Extraindo recurso {resource.name}...")
-          sql_file = open(f'scripts/sql/{resource.name}.sql', encoding='utf-8')
-          sql_query = sql_file.read()
-          cursor.execute(sql_query)
-          rows = cursor.fetchall()
-          if len(rows) == 0:
-            logger.warning(f"Recurso {resource.name} sem nenhum registro.")
-          colnames = [desc[0] for desc in cursor.description]
-          with open(f'data/raw/{resource.name}.csv', "w", encoding='utf-8-sig', newline='') as fp:
-            myFile = csv.DictWriter(fp, colnames, delimiter=';')
-            myFile.writeheader()
-            myFile.writerows(rows)
-        else:
-         logger.error(f"echo Tabela {resource.name} não existente no banco de dados")
+      if cursor.execute(f"show tables where Tables_in_age7 = '{resource.sources[0]['table']}';") == 1:
+        logger.info(f"Extraindo recurso {resource.name}...")
+        sql_file = open(f'scripts/sql/{resource.name}.sql', encoding='utf-8')
+        sql_query = sql_file.read()
+        cursor.execute(sql_query)
+        rows = cursor.fetchall()
+        if len(rows) == 0:
+          logger.warning(f"Recurso {resource.name} sem nenhum registro.")
+        colnames = [desc[0] for desc in cursor.description]
+        with open(f'data/raw/{resource.name}.csv', "w", encoding='utf-8-sig', newline='') as fp:
+          myFile = csv.DictWriter(fp, colnames, delimiter=';')
+          myFile.writeheader()
+          myFile.writerows(rows)
+      else:
+        logger.error(f"echo Tabela {resource.name} não existente no banco de dados")
 
 def full_extract():
   dp = Package('datapackage.yaml')
