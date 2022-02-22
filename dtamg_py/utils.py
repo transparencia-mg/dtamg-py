@@ -24,7 +24,8 @@ def connect():
                          user=os.environ.get('DB_USER'),
                          password=os.environ.get('DB_PASSWORD'),
                          database=os.environ.get('DB_DATABASE'),
-                         cursorclass=pymysql.cursors.DictCursor)
+                         cursorclass=pymysql.cursors.DictCursor,
+                         read_timeout=30)
   return result
 
 def extract_resources(resources):
