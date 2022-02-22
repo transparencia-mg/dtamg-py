@@ -40,7 +40,7 @@ def extract_resources(resources):
             extract_csv(connection, resource)
             resources.remove(resource)
     except OperationalError as e:
-      logger.error(f'{e}')
+      logger.error(e)
       while retry < MAX_RETRIES:
         retry += 1
         logger.info(f'{retry} retry attempt.')
@@ -48,7 +48,7 @@ def extract_resources(resources):
           connection = connect()
           break
         except OperationalError as e:
-          logger.error(f'{e}')
+          logger.error(e)
           continue
 
 def extract_csv(connection, resource):
