@@ -1,3 +1,4 @@
+import time
 import os
 import sys
 import json
@@ -29,9 +30,8 @@ def connect():
 def extract_resources(resources):
   
   MAX_RETRIES = 10
-  WAIT_IN_SECONDS = 10
+  WAIT_IN_SECONDS_BETWEEN_RETRIES = 10
   retry = 1
-
   while(bool(resources)):
     try:
       connection = connect()
@@ -43,8 +43,9 @@ def extract_resources(resources):
       logger.error(e)
       while retry < MAX_RETRIES:
         retry += 1
-        logger.info(f'{retry} retry attempt.')
+        time.sleep(WAIT_IN_SECONDS_BETWEEN_RETRIES)
         try:
+          logger.info(f'{retry} retry attempt.')
           connection = connect()
           break
         except OperationalError as e:
