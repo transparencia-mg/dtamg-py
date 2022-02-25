@@ -1,4 +1,5 @@
 import click
+import logging
 from dtamg_py.full_extract import full_extract_cli
 from dtamg_py.extract import extract_cli
 from dtamg_py.validate import validate_cli
@@ -10,9 +11,16 @@ from dtamg_py.build_documentation_folder import build_documentation_folder_cli
 from dtamg_py.validate_tableschemas import validate_tableschemas_cli
 from dtamg_py.remove_sqs import remove_sqs_cli
 
+LOG_FORMAT = '%(asctime)s %(levelname)-5.5s [%(name)s] %(message)s'
+LOG_DATE_FORMAT = '%Y-%m-%dT%H:%M:%S%z'
+
 @click.group(context_settings=dict(help_option_names=["-h", "--help"]))
-def cli():
-  pass
+@click.option('--verbose', '-v', default=False, is_flag=True, help='Produce detailed output for diagnostic purposes.')
+def cli(verbose):
+  if verbose:
+        logging.basicConfig(format=LOG_FORMAT, datefmt=LOG_DATE_FORMAT, level=logging.DEBUG)
+  else:
+        logging.basicConfig(format=LOG_FORMAT, datefmt=LOG_DATE_FORMAT, level=logging.INFO)
 
 @cli.group()
 def etl_make():
