@@ -2,6 +2,11 @@
 
 Documentação das principais alterações sofridas por este repositório. Baseado na filosofia [Mantenha um Changelog](https://keepachangelog.com/pt-BR/1.0.0/).
 
+### [0.1.4] - 2022-03-07
+
+- Insere lógica de _retry_ para conexões perdidas com o banco de dados ([#16](https://github.com/transparencia-mg/dtamg-py/pull/16))
+- Geração de mensanges de log com pacote logging ([#15](https://github.com/transparencia-mg/dtamg-py/pull/15))
+
 ### [0.1.3] - 2022-01-31
 
 - Inclui função extract
