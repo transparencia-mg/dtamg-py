@@ -17,6 +17,9 @@ INSTALL_REQUIRES = [
   "psycopg2>=2.9.1",
   "PyMySQL>=1.0.2",
   "ruamel.yaml==0.17.17",
+  "pandas==1.4.1",
+  "xlrd>=1.0.0",
+  "openpyxl==3.0.9",
 ]
 
 # Variáveis author, copyright e licence utilizadas para criação/atualização do arquivo LICENCE.txt (rotina Make durante processo de atualização do pacote "make update-package")

@@ -10,6 +10,7 @@ from dtamg_py.update import dpckan_update_cli
 from dtamg_py.build_documentation_folder import build_documentation_folder_cli
 from dtamg_py.validate_tableschemas import validate_tableschemas_cli
 from dtamg_py.remove_sqs import remove_sqs_cli
+from dtamg_py.convert_to_csv import convert_csv_cli
 
 LOG_FORMAT = '%(asctime)s %(levelname)-5.5s [%(name)s] %(message)s'
 LOG_DATE_FORMAT = '%Y-%m-%dT%H:%M:%S%z'
@@ -36,3 +37,9 @@ etl_make.add_command(dpckan_update_cli)
 etl_make.add_command(build_documentation_folder_cli)
 etl_make.add_command(validate_tableschemas_cli)
 etl_make.add_command(remove_sqs_cli)
+
+@cli.group()
+def template():
+  pass
+
+template.add_command(convert_csv_cli)
