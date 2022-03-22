@@ -2,6 +2,9 @@
 
 Documentação das principais alterações sofridas por este repositório. Baseado na filosofia [Mantenha um Changelog](https://keepachangelog.com/pt-BR/1.0.0/).
 
+### [0.1.5] - 2022-03-22
+  - Inclui função para converter arquivos xls ou xlsx da pasta data/raw em arquivos .csv na raiz da pasta data
+
 ### [0.1.4] - 2022-03-07
 
 - Insere lógica de _retry_ para conexões perdidas com o banco de dados ([#16](https://github.com/transparencia-mg/dtamg-py/pull/16))
