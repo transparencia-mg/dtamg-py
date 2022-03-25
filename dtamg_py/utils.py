@@ -252,3 +252,12 @@ def convert_csv(xlsx_file_path, csv_file_path):
   # referências: https://colab.research.google.com/drive/1R6SHFugbCEuy5ppjDFymquj3jjbgY7Sx?authuser=1
   read_file = pd.read_excel (xlsx_file_path, )
   read_file.to_csv (csv_file_path, index = None, header=True, sep = ';', decimal = ',', encoding = 'utf-8-sig', na_rep = "")
+
+def compare_data_resource_paths():
+  data_resources_names = os.listdir('data')
+  data_resources_paths = [os.path.join('data', i) for i in data_resources_names]
+  local_package = Package('datapackage.json')
+  datapackage_resouces_paths = [i["path"] for i in local_package.resources]
+  if data_resources_paths != datapackage_resouces_paths:
+    click.echo(f"Resources presentes no arquivo datapackage.json diferente dos listados da pasta data.")
+    sys.exit(1)
