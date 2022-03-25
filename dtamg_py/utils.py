@@ -247,11 +247,8 @@ def remove_sqs():
         logger.info(f"Salvando alterações no recurso {file_name}")
         yaml.dump(file_content, f)
 
-def convert_csv():
+def convert_csv(xlsx_file_path, csv_file_path):
   # referências: https://towardsdatascience.com/how-to-export-pandas-dataframe-to-csv-2038e43d9c03
   # referências: https://colab.research.google.com/drive/1R6SHFugbCEuy5ppjDFymquj3jjbgY7Sx?authuser=1
-  directory = 'data/raw'
-  for filename in os.listdir(directory):
-    file_path = os.path.join(directory, filename)
-    read_file = pd.read_excel (file_path)
-    read_file.to_csv (f'data/{filename.split(".")[0]}.csv', index = None, header=True, sep = ';', decimal = ',', encoding = 'utf-8-sig', na_rep = "")
+  read_file = pd.read_excel (xlsx_file_path, )
+  read_file.to_csv (csv_file_path, index = None, header=True, sep = ';', decimal = ',', encoding = 'utf-8-sig', na_rep = "")
