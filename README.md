@@ -36,7 +36,7 @@ $ source venv/Scripts/activate
 
 ## Instalação
 
-O `dtamg-py` está disponível no Python Package Index - [PyPI](https://pypi.org/project/meu-contracheque/) e pode ser instalado utilizando-se o comando abaixo:
+O `dtamg-py` está disponível no Python Package Index - [PyPI](https://pypi.org/project/dtamg-py/) e pode ser instalado utilizando-se o comando abaixo:
 
 ```bash
 # Antes de executar o comando abaixo lembre-se que ambiente Python deverá estar ativo
