@@ -2,6 +2,10 @@
 
 Documentação das principais alterações sofridas por este repositório. Baseado na filosofia [Mantenha um Changelog](https://keepachangelog.com/pt-BR/1.0.0/).
 
+### [0.1.6] - 2022-03-25
+  - Melhora função para converter arquivos. Conversão apenas de arquivos xlsx da pasta "upload" para pasta data
+  - Cria função para comparação entre paths dos recursos presentes no datapackage.json e na pasta data
+
 ### [0.1.5] - 2022-03-22
   - Inclui função para converter arquivos xls ou xlsx da pasta data/raw em arquivos .csv na raiz da pasta data
 
